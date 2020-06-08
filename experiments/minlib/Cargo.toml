@@ -1,0 +1,15 @@
+[package]
+name = "minlib"
+version = "0.1.0"
+authors = ["Daniel McMillan <mcmillan.daniel3@gmail.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wee_alloc = "0.4.5"
+
+[profile.release]
+# Tell `rustc` to optimize for small code size.
+opt-level = "s"

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <title>Minimum wasm lib test</title>
+  <body>
+    <p
+      id="display"
+      style="white-space: pre; line-height: 1; font-family: monospace;"
+    ></p>
+    <script type="application/javascript">
+      function* range(start, stop, step = 1) {
+        for (let i = start; i < stop; i += step) {
+          yield i;
+        }
+      }
+
+      function decodeString(memory, ptr, len) {
+        const buffer = memory.buffer.slice(ptr, ptr + len);
+        const arr = new Uint8Array(buffer);
+        const decoder = new TextDecoder("utf-8");
+        return decoder.decode(arr);
+      }
+
+      async function main() {
+        const displayEl = document.getElementById("display");
+        const memory = new WebAssembly.Memory({
+          initial: 17,
+          // maximum: 32,
+        });
+        const print = (ptr, len) => {
+          const str = decodeString(memory, ptr, len);
+          console.log(`${new Date().toISOString()} WASM: ${str}`);
+        };
+        const { instance } = await WebAssembly.instantiateStreaming(
+          fetch("/target/wasm32-unknown-unknown/release/minlib.wasm"),
+          {
+            cloudbin: {
+              print,
+            },
+            env: {
+              memory,
+            },
+          }
+        );
+        window.instance = instance;
+        window.memory = memory;
+        const statePtr = instance.exports.setup();
+        const draw = () => {
+          const displayPtr = instance.exports.draw(statePtr);
+          let text = "";
+          for (const col of range(0, 25)) {
+            const ptr = displayPtr + col * 40;
+            text += decodeString(memory, ptr, 40) + "\n";
+          }
+          displayEl.innerText = text;
+        };
+
+        setInterval(draw, 100);
+        // instance.exports.destroy(statePtr);
+      }
+      main();
+    </script>
+  </body>
+</html>
