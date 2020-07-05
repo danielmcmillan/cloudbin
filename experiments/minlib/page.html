@@ -23,27 +23,38 @@
 
       async function main() {
         const displayEl = document.getElementById("display");
-        const memory = new WebAssembly.Memory({
-          initial: 17,
-          // maximum: 32,
-        });
+        // const memory = new WebAssembly.Memory({
+        //   initial: 17,
+        //   // maximum: 32,
+        // });
+        // window.memory = memory;
         const print = (ptr, len) => {
           const str = decodeString(memory, ptr, len);
           console.log(`${new Date().toISOString()} WASM: ${str}`);
         };
         const { instance } = await WebAssembly.instantiateStreaming(
           fetch("/target/wasm32-unknown-unknown/release/minlib.wasm"),
+          // fetch("/ctest.wasm"),
           {
-            cloudbin: {
+            env: {
               print,
             },
-            env: {
-              memory,
+            // stubs for some wasi functions to support emscripten
+            wasi_snapshot_preview1: {
+              proc_exit: (code) => console.log(`proc_exit(${code})`),
+              args_sizes_get: (a, b) => {
+                console.log(`args_sizes_get(${a}, ${b})`);
+                return 0;
+              },
+              args_get: (a, b) => {
+                console.log(`args_get(${a}, ${b})`);
+                return 0;
+              },
             },
           }
         );
         window.instance = instance;
-        window.memory = memory;
+        window.memory = instance.exports.memory;
         const statePtr = instance.exports.setup();
         const draw = () => {
           const displayPtr = instance.exports.draw(statePtr);

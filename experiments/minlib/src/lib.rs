@@ -4,10 +4,8 @@ extern crate wee_alloc;
 // Use `wee_alloc` as the global allocator.
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-// use std::mem;
-use std::io::Write;
 
-#[link(wasm_import_module = "cloudbin")]
+#[link(wasm_import_module = "env")]
 extern "C" {
     fn print(ptr: *const u8, len: usize);
 }
@@ -41,6 +39,7 @@ pub extern "C" fn setup() -> *mut State {
         vx: 1,
         vy: 1,
     });
+    print_safe("Initialised state");
     Box::into_raw(state)
 }
 
@@ -55,7 +54,6 @@ pub unsafe extern "C" fn destroy(state: *mut State) {
 pub unsafe extern "C" fn draw(state: *mut State) -> *mut u8 {
     let state = state.as_mut().unwrap();
     draw_safe(state);
-    print_safe("Drawing");
 
     state.display_buffer.first_mut().unwrap()
 }
@@ -88,5 +86,4 @@ fn draw_safe(state: &mut State) {
 
     buffer[old_index] = b' ';
     buffer[new_index] = b'O';
-    // write!(&mut *state.display_buffer, "hello world").unwrap()
 }
