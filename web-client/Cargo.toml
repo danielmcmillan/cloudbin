@@ -8,8 +8,9 @@ edition = "2018"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-wasm-bindgen = "0.2.64"
-wee_alloc = { version = "0.4.5", optional = true }
+yew = "0.17"
+wasm-bindgen = "0.2"
+wee_alloc = { version = "0.4", optional = true }
 
 [profile.release]
 opt-level = "s"
