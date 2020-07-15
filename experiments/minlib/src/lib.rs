@@ -61,6 +61,9 @@ pub unsafe extern "C" fn draw(state: *mut State) -> *mut u8 {
 fn print_safe(text: &str) {
     unsafe { print(text.as_ptr(), text.len()) }
 }
+// pub fn print_safe(text: &str) {
+//     print!("{}", text);
+// }
 
 fn ball_index(state: &State) -> usize {
     state.x as usize + state.y as usize * DISPLAY_BUFFER_WIDTH
