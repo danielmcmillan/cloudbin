@@ -1,0 +1,15 @@
+[package]
+name = "cloudbin_web_client"
+version = "0.1.0"
+authors = ["Daniel McMillan <mcmillan.daniel3@gmail.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2.64"
+wee_alloc = { version = "0.4.5", optional = true }
+
+[profile.release]
+opt-level = "s"
