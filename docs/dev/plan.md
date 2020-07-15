@@ -14,20 +14,30 @@ Minimum POC for running application in the browser.
 
 - [x] Run wasm binary in browser
 - [x] Provide simple text buffer API
-- [ ] SPA with wasm binary downloaded from server
+- [ ] SPA with CI served from S3
+- [ ] Client executes wasm binary downloaded from S3
 
 ### Stage 2
 
 Application management
 
-- [ ] Upload application as archive
-- [ ] Application manifest file used to determine interfaces provided to binary
-- [ ] List and view details of uploaded binaries
+- [ ] Documentation for application manifest file supporting at least: name, version, description.
+- Upload an application
+  - [ ] Server support for application creation: validate, pre-process, parse manifest, archive
+  - [ ] Server support for updating application: replace existing one
+  - [ ] Upload application as archive from client
+- [ ] List and view details of uploaded applications
+- [ ] Execute any uploaded application in the client
+- [ ] Delete an application
 
 ### Stage 3
 
-Slightly enhanced interfaces for client
+Initial application interfaces for client
 
+- [ ] Support defining required features in application manifest file
+  - Core features version
+  - List of additional interfaces required, with version and possibly with configuration
+- [ ] Provide core features: scheduling, logging, time
 - [ ] Provide simple API for user input
 - [ ] Provide text-based graphics API
 
@@ -48,8 +58,9 @@ Server binary
 ### Beyond
 
 - Better graphics API
+- Application version management: keep and list all versions, disallow replacing existing published version
 - Users
-- Session management:
+- Session/room management:
   - Users can create or join sessions
   - App defines allowed number of people per session
   - Session list + participants updates in real time
@@ -62,6 +73,7 @@ Server binary
 ## Goals
 
 - Keep cloud-provider specific functionality abstracted away as much as possible
+- Use Rust wherever possible in client and server
 - Good browser support is non-goal. Use latest experimental features.
 
 ### Security
