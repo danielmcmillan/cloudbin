@@ -20,6 +20,8 @@ jobs:
       with:
         version: 'latest'
     - name: Build
+      working-directory: web-client
       run: wasm-pack build --release
 #     - name: Run tests
+#       working-directory: web-client
 #       run: cargo test --verbose
